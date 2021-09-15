@@ -2,7 +2,7 @@
 Code for "Pixel Level Global Network for Detion and Localization of Image Forgeries". The paper is under review.
 
 # Overview
-
+[Image](https://github.com/znshi/PL-GNet-image-forgery-detection/blob/main/architecture.png)
 # Dependency
 PL-GNet is written in Tensorflow. Some packages need to be installed.
 
