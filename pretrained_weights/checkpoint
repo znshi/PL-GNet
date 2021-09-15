@@ -1,0 +1,6 @@
+model_checkpoint_path: "modelS70525.ckpt"
+all_model_checkpoint_paths: "modelS64480.ckpt"
+all_model_checkpoint_paths: "modelS66495.ckpt"
+all_model_checkpoint_paths: "modelS68510.ckpt"
+all_model_checkpoint_paths: "final_model_nist.ckpt"
+all_model_checkpoint_paths: "modelS70525.ckpt"
