@@ -11,7 +11,7 @@ Code for "Pixel Level Global Network for Detion and Localization of Image Forger
 
 There are three building blocks in our end-to-end PL-GNet framework as shown in following figure: 
 
-![Image](https://github.com/znshi/PL-GNet-image-forgery-detection/blob/main/architecture.png)
+![Image](https://github.com/znshi/PL-GNet-image-forgery-detection/tree/main/tools/architecture.png)
 
 (1) An Encoding net allows us to extract the global features and generate the high-quality feature maps which indicate possible tampered regions. The new designed first layer and backbone network architecture based on atrous convolutions in Encoding net are adopted to capture the changes of pixel relationships and extract rich multi-scale spatial information. 
 
