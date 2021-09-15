@@ -29,8 +29,6 @@ PL-GNet is written in Tensorflow. Some packages need to be installed.
   
   - CUDNN  6.0.21
 
-Other packages please run re
-
 Other packages please run requirements.txt:
 ```
 pip install -r requirements.txt
@@ -51,7 +49,7 @@ The other image libraries are similar, just change the file path names according
 If you only want to test PL-GNet simply, please download the repo and play 
 with the provided ipython notebook.
 ```
-Demo.ipynb
+PL-GNet-Demo.ipynb
 ```
 And in the demo script, We offer a variety of improved versions of PL-GNet. And you can test as many times as you like. 
 
