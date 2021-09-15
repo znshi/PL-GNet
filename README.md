@@ -23,12 +23,39 @@ There are three building blocks in our end-to-end PL-GNet framework as shown in 
 # Dependency
 PL-GNet is written in Tensorflow. Some packages need to be installed.
 
+Other packages please run requirements.txt:
+```
+pip install -r requirements.txt
+```
+
+# Data processing
+1. Download the NC2016 dataset (https://drive.google.com/drive/folders/15DO44bJDbwT7k5PgvoZ4RIYbYFzgcDYT).<br>
+2. For more information on synthetic_data, you can refer to (https://github.com/jawadbappy/forgery_localization_HLED),<br>
+For more details, please see the scriots in the `data_processing` folder:
+
+```
+IFC_preprocess.ipynb
+NC2016_preprocess.ipynb
+```
+The other image libraries are similar, just change the file path names accordingly.
+
+# Demo
+If you only want to test PL-GNet simply, please download the repo and play 
+with the provided ipython notebook.
+```
+Demo.ipynb
+```
+And in the demo script, We offer a variety of improved versions of PL-GNet. And you can test as many times as you like. 
 
 # Test
-To run the code on the NC2016 dataset,type:
+To run the code on the testing dataset,type and change the file path names accordingly.:
 
 > python test.py
  
  
 # Contact
 For any paper related questions, please contact shizn17@mails.jlu.edu.cn
+
+
+# Citation
+If this model is helpful for your research, please cite our paper.
