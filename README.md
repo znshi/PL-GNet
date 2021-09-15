@@ -23,6 +23,14 @@ There are three building blocks in our end-to-end PL-GNet framework as shown in 
 # Dependency
 PL-GNet is written in Tensorflow. Some packages need to be installed.
 
+  - Python  2.7.13, 
+  
+  - CUDA   8.0 
+  
+  - CUDNN  6.0.21
+
+Other packages please run re
+
 Other packages please run requirements.txt:
 ```
 pip install -r requirements.txt
