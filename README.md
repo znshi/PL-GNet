@@ -58,9 +58,13 @@ To run the code on the testing dataset,type and change the file path names accor
 
 > python test.py
  
+# Sample Outputs
+
+![Image](https://github.com/znshi/PL-GNet-image-forgery-detection/blob/main/tools/Qualitative%20Results%20of%20PL-GNet%20on%20IFC%2C%20COVERAGE%20and%20NC2016%20datasets.png)
  
 # Contact
 For any paper related questions, please contact shizn17@mails.jlu.edu.cn
+
 
 
 # Citation
