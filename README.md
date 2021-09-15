@@ -19,6 +19,7 @@ There are three building blocks in our end-to-end PL-GNet framework as shown in 
 
 (3) A Decoding net which incorporates the output of Encoding net and LSTM network learns the mapping from low-resolution feature maps to pixel-wise prediction masks. Furthermore, a series of ablation experiments are conducted to systematically optimize the design of the Encoding network. Extensive experiments on the six challenging datasets demonstrate that our PL-GNet outperforms each individual subnetwork, and consistently achieves state-of-the-art performance compared to alternative methods over three evaluation metrics. 
 
+
 # Dependency
 PL-GNet is written in Tensorflow. Some packages need to be installed.
 
