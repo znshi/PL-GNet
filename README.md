@@ -45,6 +45,10 @@ NC2016_preprocess.ipynb
 ```
 The other image libraries are similar, just change the file path names accordingly.
 
+# pretrained_weights
+
+Download the ckpt.data file in (https://drive.google.com/drive/folders/15DO44bJDbwT7k5PgvoZ4RIYbYFzgcDYT).<br>
+
 # Demo
 If you only want to test PL-GNet simply, please download the repo and play 
 with the provided ipython notebook.
