@@ -37,20 +37,16 @@ import os
 import bisect
 import pickle
 
-Bayar_Kernel = np.array([
-    [[0,0,0,0,0],[0,(1.0/4)*-1,(1.0/4)*2,(1.0/4)*-1,0],[0,(1.0/4)*2,(1.0/4)*-4,(1.0/4)*2,0],[0,(1.0/4)*-1,(1.0/4)*2,(1.0/4)*-1,0],[0,0,0,0,0]],
-    [[(1.0/12)*-1,(1.0/12)*2,(1.0/12)*-2,(1.0/12)*2,(1.0/12)*-1],[(1.0/12)*2,(1.0/12)*-6,(1.0/12)*8,(1.0/12)*-6,(1.0/12)*2],[(1.0/12)*-2,(1.0/12)*8,(1.0/12)*-12,(1.0/12)*8,(1.0/12)*-2],[(1.0/12)*2,(1.0/12)*-6,(1.0/12)*8,(1.0/12)*-6,(1.0/12)*2],[(1.0/12)*-1,(1.0/12)*2,(1.0/12)*-2,(1.0/12)*2,(1.0/12)*-1]],
-    [[0,0,0,0,0],[0,0,0,0,0],[0,(1.0/2)*1,(1.0/2)*-2,(1.0/2)*1,0],[0,0,0,0,0],[0,0,0,0,0]]
-])
-Bayar_Kernel = np.vstack((Bayar_Kernel, Bayar_Kernel, Bayar_Kernel)).reshape(3, 3, 5, 5).transpose(2,3,0,1)
-
 SRM_Kernel = np.array([
     [[0,0,0,0,0],[0,0,0,0,0],[0,0,-1,1,0],[0,0,0,0,0],[0,0,0,0,0]],
     [[0,0,0,0,0],[0,0,0,0,0],[0,1,-1,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     [[0,0,0,0,0],[0,0,1,0,0],[0,0,-1,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     [[0,0,0,0,0],[0,0,0,0,0],[0,0,-1,0,0],[0,0,1,0,0],[0,0,0,0,0]],
+    [[0,0,0,0,0],[0,0,0,0,0],[0,1,-2,1,0],[0,0,0,0,0],[0,0,0,0,0]],
+    [[0,0,0,0,0],[0,-1,2,-1,0],[0,2,-4,2,0],[0,-1,2,-1,0],[0,0,0,0,0]],
+    [[-1,2,-2,2,-1],[2,-6,8,-6,2],[-2,8,-12,8,-2],[2,-6,8,-6,2],[-1,2,-2,2,-1]],
 ])
-SRM_Kernel = np.vstack((SRM_Kernel, SRM_Kernel, SRM_Kernel)).reshape(3, 4, 5, 5).transpose(2,3,0,1)
+SRM_Kernel = np.vstack((SRM_Kernel, SRM_Kernel, SRM_Kernel)).reshape(3, 7, 5, 5).transpose(2,3,0,1)
 
 
 tf.reset_default_graph()
@@ -197,10 +193,9 @@ with tf.device('/gpu:1'):
     def segNet(input_layer,bSize,freqFeat,weights,biases):
         
         # layer1: resblock, input size(256,256)
-        layer1 = tf.nn.conv2d(input_layer, Bayar_Kernel, strides=[1,1,1,1],padding ='SAME',name = 'SRM_out' )
+        layer1 = tf.nn.conv2d(input_layer, SRM_Kernel, strides=[1,1,1,1],padding ='SAME',name = 'SRM_out' )
         layer2 = tf.nn.conv2d(input_layer, filter, strides=[1,1,1,1],padding ='SAME',name = 'SRM_out1' )
-        layer3 = tf.nn.conv2d(input_layer, SRM_Kernel, strides=[1,1,1,1],padding ='SAME',name = 'SRM_out1' )
-        concat = tf.concat([layer1, layer2,layer3], axis=3, name='concat')
+        concat = tf.concat([layer1, layer2], axis=3, name='concat')
         print('concat:',concat.shape)
         
         Conv_1 = slim.conv2d(concat,nbFilter,[3,3],normalizer_fn=slim.batch_norm,scope='conv_'+str(1))
@@ -234,12 +229,7 @@ with tf.device('/gpu:1'):
         Conv_9 = slim.conv2d(ReLu_8,8*nbFilter,[3,3],normalizer_fn=slim.batch_norm,scope='conv_'+str(9))
         ReLu_9 = tf.nn.relu(Conv_9)
         print('ReLu_9:',ReLu_9.shape)
-        # layer4: resblock, input size(32,32) 
-#         print('Pool_4:',Pool_4.shape)
-        
-#         Conv_10_AC = slim.conv2d(ReLu_9,8*nbFilter,[1,1],normalizer_fn=slim.batch_norm,scope='conv_'+str(10))
-#         Tan_1 = tf.nn.relu(Conv_10_AC)
-        
+    
         Conv_11_AC = tf.nn.atrous_conv2d(ReLu_9,atrous_fil,rate =2,padding = 'SAME',name = 'conv_'+str(11))
         BN_2 = slim.batch_norm(Conv_11_AC,activation_fn=None)
         Tan_2 = tf.nn.relu(BN_2)
@@ -409,17 +399,14 @@ with tf.Session(config=config) as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
     
-    saver.restore(sess,'../model_s_gaijin6/modelS.ckpt')
+    saver.restore(sess,'../model_s/modelS.ckpt')
     print ('session starting .................!!!!')
             
     TP = 0; FP = 0;TN = 0; FN = 0 
     #TP1=0;FP1=0
     num_images=batch_size
     
-#     tx = np.load('../dataset_npy/NC_16/NC16_mani_imgS.npy')
-#     tx= np.multiply(tx,1.0/mx)
-#     ty = np.load('../dataset_npy/NC_16/NC16_mani_labelS.npy')
-#     freq4 = np.load('../dataset_npy/NC_16/NC16_mani_imgS_feat.npy')
+
     tx = np.load('../dataset_npy/NC_16/mani/NC16_mani_test_img.npy')
     tx= np.multiply(tx,1.0/mx)
     ty = np.load('../dataset_npy/NC_16/mani/NC16_mani_test_label.npy')
@@ -472,61 +459,3 @@ with tf.Session(config=config) as sess:
     print ('final_probabilities1_shape;',np.shape(final_probabilities1))
     
     #sio.savemat('pred_res.mat',{'img':nTx,'labels':nTy,'pred':final_predictions,'prob':final_probabilities,'gT':y2})
-    nb = 0
-    F1_sum =0
-#     for i in range(n1,n2):
-    for i in range(n1,150):
-        print('i=',i)
-        cmap = plt.get_cmap('bwr')
-        f,(ax,ax1,ax2)=plt.subplots(1,3,sharey=True)
-#         f,(ax,ax1,ax2,ax3)=plt.subplots(1,4,sharey=True)
-        ax.imshow(tx[i])
-        ax1.imshow(ty[i])
-        ax2.imshow(final_predictions1[i])
-        plt.imsave(fname='/home/shizenan/shi_tmp/tx_%s.png'%i,
-                       arr=tx[i], cmap=plt.cm.gray)
-        plt.imsave(fname='/home/shizenan/shi_tmp/ty_%s.png'%i,
-                       arr=ty[i], cmap=plt.cm.gray)
-        plt.imsave(fname='/home/shizenan/shi_tmp/final_predictions_%s.png'%i,
-                       arr=final_predictions1[i], cmap=plt.cm.gray)
-        F1 = F1_score(final_predictions1[i],ty[i])
-        
-        
-        #ax3.set_title('Final Argmax')
-#         probability_graph = ax3.imshow(final_probabilities.squeeze()[nb, :,:, 0])
-        nb += 1
-        #ax3.set_title('Final Probability of the Class')
-#         plt.colorbar(probability_graph)
-        plt.show()
-        print('F1:,i',F1,i)
-        F1_sum += F1
-    avg_F1 = F1_sum/(n2-n1)
-    print('F1_sum:',F1_sum)
-    print('avg_F1:',avg_F1)
-    print('ty.shape:',ty.shape)
-    print('final_predictions1.shape:',final_predictions1.shape)
-    print('final_probabilities1.shape:',final_probabilities1.shape)
-    print('-----------------------------------------------------------')
-    
-    prob_new1=np.zeros(len(final_probabilities1))
-# prob_new1 = prob_new[:,0]
-
-# prob_new=np.zeros(len(final_probabilities1))
-#     for i in range(0,150):
-#         if final_probabilities1[i,0]>= final_probabilities1[i,1]:
-#             prob_new[i]= final_probabilities1[i,0]
-#         if final_probabilities1[i,0]<= final_probabilities1[i,1]:
-#               prob_new[i]= final_probabilities1[i,1]
-    ty = ty[0:150,]
-    ty= ty.flatten()
-    for i in range(0,len(final_probabilities1)):
-        if ty[i]==0.:
-            prob_new1[i]= final_probabilities1[i,1]
-        if ty[i]==1.:
-            prob_new1[i]= final_probabilities1[i,0]
-            
-    print(prob_new1.shape)
-    print(prob_new1.shape)
-
-
-    ccc= check_fit(ty, prob_new1)
